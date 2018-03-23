@@ -1229,14 +1229,14 @@ sub GetSeqFromPW
 	
 
 	//  ------Query to get emp_seq
-	format query as "SELECT emp_seq, first_name + ' ' + last_name as name from micros.emp_def WHERE id = ", empPW
+	format query as "SELECT emp_seq from micros.emp_def WHERE id = ", empPW
 
 	DLLCALL_CDECL hODBCDLL, sqlGetRecordSet(query)
 	DLLCALL_CDECL hODBCDLL, sqlGetFirst(ref query)
 	if len(query) < 1
 		exitwitherror "ERROR: Invalid ID"
 	else
-		split query, ";" , EmpSeq, EmpName
+		split query, ";" , EmpSeq
 	endif
 	format query as "SELECT max(shift_seq) from micros.shift_emp_ttl where shift_start_time between '",date,"' and dateadd(day,1,'",date,"') and emp_seq=",EmpSeq
 	DLLCALL_CDECL hODBCDLL, sqlGetRecordSet(query)
@@ -1358,7 +1358,7 @@ sub GetServerIP
 		endif
 //---------------------------------------------------------------------------		
 	//  ------Query to get emp_seq
-	format query as "select ip_addr = min (ip_addr) from micros.lan_node_def where obj_num in (99,999)"
+	format query as "select ip_addr from micros.lan_node_def where obj_num = 99"
 
 	DLLCALL_CDECL hODBCDLL, sqlGetRecordSet(query)
 	DLLCALL_CDECL hODBCDLL, sqlGetFirst(ref query)
